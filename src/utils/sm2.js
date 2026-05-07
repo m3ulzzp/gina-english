@@ -7,7 +7,8 @@
  * @returns {Object} 更新后的进度
  */
 export function calculateNextReview(progress, quality) {
-  const { easeFactor, interval, repetitions } = progress;
+  const { easeFactor, interval } = progress;
+  let repetitions = progress.repetitions;
   
   // 质量评分转换
   const qualityScore = Math.max(0, Math.min(5, quality));

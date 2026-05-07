@@ -39,3 +39,4 @@ ENV/
 *.sqlite
 *.sqlite3
 
+.vercel

@@ -1,10 +1,9 @@
 import { useStore } from "../store/useStore";
-import { sm2Review } from "../utils/sm2";
 import { speak } from "../utils/speech";
 import { Link } from "react-router-dom";
 
 export function WrongBook() {
-  const { wrongBook, removeFromWrongBook, updateWrongBookEntry, incrementTodayCorrect, incrementTodayTotal } = useStore();
+  const { wrongBook, removeFromWrongBook, incrementTodayCorrect, incrementTodayTotal } = useStore();
   const wrongWords = Object.values(wrongBook);
 
   const handleReview = (wordStr: string) => {
