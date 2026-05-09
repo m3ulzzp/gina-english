@@ -1,0 +1,13 @@
+[build]
+command = "python3 scripts/build.py"
+publish = "public"
+
+[functions]
+[functions.api.words]
+expression = """
+export default async function handler(request) {
+  return new Response(JSON.stringify({ words: WORD_DATA }), {
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+"""

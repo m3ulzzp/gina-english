@@ -1,36 +1,48 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "devCommand": "npm run dev",
+  "buildCommand": "python3 scripts/build.py",
+  "functions": {
+    "api/words.js": {
+      "runtime": "edge"
+    }
+  },
+  "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://gina-english-backend.vercel.app/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/api/words.js",
+      "destination": "/api/words.js"
     }
   ],
   "headers": [
     {
-      "source": "/assets/(.*)",
+      "source": "/api/words.js",
       "headers": [
         {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+          "value": "public, max-age=31536000"
+        }
+      ]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        }
+      ]
+    },
+    {
+      "source": "/service-worker.js",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
         }
       ]
     }
-  ],
-  "experimentalServices": {
-    "frontend": {
-      "routePrefix": "/",
-      "framework": "vite"
-    },
-    "backend": {
-      "entrypoint": "backend",
-      "routePrefix": "/_/backend"
-    }
-  }
+  ]
 }

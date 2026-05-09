@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gina 学英语</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Gina 学英语">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        
+        /* 首页 */
+        .home-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .home-header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .home-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        /* 进度报告 */
+        .progress-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .progress-card h2 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 8px;
+            height: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+        
+        /* 单元选择 */
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .unit-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .unit-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .unit-card h3 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .unit-card .word-count {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* 学习卡片 */
+        .study-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .word-display {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .phonetic {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .meaning {
+            font-size: 18px;
+            color: #4CAF50;
+            margin-bottom: 16px;
+        }
+        
+        .pos {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .example {
+            font-size: 14px;
+            color: #999;
+            font-style: italic;
+        }
+        
+        .word-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 16px auto;
+            background: #f0f0f0;
+        }
+        
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+        }
+        
+        /* 导航 */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .nav-item.active {
+            color: #667eea;
+        }
+        
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .nav-item span {
+            display: block;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        /* 页面切换 */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* 加载状态 */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首页 -->
+        <div id="home-page" class="page active">
+            <div class="home-header">
+                <h1>🎯 Gina 学英语</h1>
+                <p>二年级英语词汇学习</p>
+            </div>
+            
+            <div class="progress-card">
+                <h2>📊 学习进度</h2>
+                <div class="progress-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-words">0</div>
+                        <div class="stat-label">总词数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="learned-words">0</div>
+                        <div class="stat-label">已学</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="mastered-words">0</div>
+                        <div class="stat-label">掌握</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="progress-card">
+                <h2>📚 选择单元</h2>
+                <div class="unit-grid" id="unit-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div>加载中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学习页 -->
+        <div id="study-page" class="page">
+            <div class="study-card" id="study-card">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>加载中...</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="prevWord()">← 上一个</button>
+                <button class="btn btn-success" onclick="markLearned()">✓ 已掌握</button>
+                <button class="btn btn-primary" onclick="nextWord()">下一个 →</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="showPage('home')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>首页</span>
+        </div>
+        <div class="nav-item" onclick="showPage('study')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+            <span>学习</span>
+        </div>
+    </div>
+    
+    <script>
+        // 全局状态
+        let allWords = [];
+        let currentWords = [];
+        let currentIndex = 0;
+        let learnedWords = new Set(JSON.parse(localStorage.getItem('learned_words') || '[]'));
+        let masteredWords = new Set(JSON.parse(localStorage.getItem('mastered_words') || '[]'));
+        
+        // 初始化
+        async function init() {
+            await loadWords();
+            updateProgress();
+            renderUnits();
+        }
+        
+        // 加载词库数据
+        async function loadWords() {
+            try {
+                const response = await fetch('/words.json');
+                if (response.ok) {
+                    allWords = await response.json();
+                } else {
+                    allWords = getEmbeddedWords();
+                }
+            } catch (e) {
+                allWords = getEmbeddedWords();
+            }
+        }
+        
+        // 内嵌词库数据（降级用）
+        function getEmbeddedWords() {
+            return [
+                // 这里会在构建时注入
+                { word: 'zoo', phonetic: '/zuː/', pos: 'n.', meaning: '动物园', example: 'We go to the zoo.', unit: 'Unit 1 At the Zoo', grade: '二年级', level: '下册' }
+            ];
+        }
+        
+        // 更新进度
+        function updateProgress() {
+            const total = allWords.length;
+            const learned = learnedWords.size;
+            const mastered = masteredWords.size;
+            const percent = total > 0 ? (learned / total * 100) : 0;
+            
+            document.getElementById('total-words').textContent = total;
+            document.getElementById('learned-words').textContent = learned;
+            document.getElementById('mastered-words').textContent = mastered;
+            document.getElementById('progress-fill').style.width = percent + '%';
+        }
+        
+        // 渲染单元列表
+        function renderUnits() {
+            const grid = document.getElementById('unit-grid');
+            const units = {};
+            
+            allWords.forEach(word => {
+                const unit = word.unit || '未分类';
+                if (!units[unit]) {
+                    units[unit] = [];
+                }
+                units[unit].push(word);
+            });
+            
+            grid.innerHTML = Object.entries(units).map(([unit, words]) => `
+                <div class="unit-card" onclick="startStudy('${unit}')">
+                    <h3>${unit}</h3>
+                    <div class="word-count">${words.length} 个单词</div>
+                </div>
+            `).join('');
+        }
+        
+        // 开始学习
+        function startStudy(unit) {
+            currentWords = allWords.filter(w => w.unit === unit);
+            currentIndex = 0;
+            showPage('study');
+            renderWord();
+        }
+        
+        // 渲染当前单词
+        function renderWord() {
+            const card = document.getElementById('study-card');
+            if (!currentWords.length || currentIndex >= currentWords.length) {
+                card.innerHTML = '<div class="loading">🎉 本单元学习完成！</div>';
+                return;
+            }
+            
+            const word = currentWords[currentIndex];
+            const progress = currentIndex + 1;
+            const total = currentWords.length;
+            
+            card.innerHTML = `
+                <div style="font-size: 12px; color: #999; margin-bottom: 8px;">
+                    ${progress} / ${total}
+                </div>
+                <div class="word-display">${word.word}</div>
+                <div class="phonetic">${word.phonetic || ''}</div>
+                <div class="pos">${word.pos || ''}</div>
+                <div class="meaning">${word.meaning}</div>
+                ${word.example ? `<div class="example">"${word.example}"</div>` : ''}
+                <div class="word-image" id="word-image">
+                    <div class="spinner"></div>
+                </div>
+            `;
+        }
+        
+        // 上一个
+        function prevWord() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderWord();
+            }
+        }
+        
+        // 下一个
+        function nextWord() {
+            if (currentIndex < currentWords.length - 1) {
+                currentIndex++;
+                renderWord();
+            }
+        }
+        
+        // 标记已掌握
+        function markLearned() {
+            if (currentWords.length && currentIndex < currentWords.length) {
+                const word = currentWords[currentIndex];
+                masteredWords.add(word.word);
+                learnedWords.add(word.word);
+                localStorage.setItem('mastered_words', JSON.stringify([...masteredWords]));
+                localStorage.setItem('learned_words', JSON.stringify([...learnedWords]));
+                updateProgress();
+                nextWord();
+            }
+        }
+        
+        // 页面切换
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            if (page === 'home') {
+                document.getElementById('home-page').classList.add('active');
+                document.querySelectorAll('.nav-item')[0].classList.add('active');
+            } else if (page === 'study') {
+                document.getElementById('study-page').classList.add('active');
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
+            }
+        }
+        
+        // 加载单词配图
+        async function loadWordImage(word) {
+            const imgEl = document.getElementById('word-image');
+            if (!imgEl) return;
+            
+            try {
+                const res = await fetch(`/api/image?q=${encodeURIComponent(word.word)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.url) {
+                        imgEl.innerHTML = `<img src="${data.url}" alt="${word.word}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
+                        return;
+                    }
+                }
+            } catch(e) {}
+            // 降级：emoji
+            imgEl.innerHTML = `<span style="font-size:48px;">${getEmoji(word.word)}</span>`;
+        }
+        
+        // 简单 emoji 映射（降级用）
+        function getEmoji(word) {
+            const map = {
+                'zoo': '🦁', 'elephant': '🐘', 'monkey': '🐒', 'tiger': '🐯',
+                'lion': '🦁', 'bird': '🐦', 'cat': '🐱', 'dog': '🐶',
+                'food': '🍽️', 'rice': '🍚', 'noodles': '🍜', 'fish': '🐟',
+                'meat': '🥩', 'egg': '🥚', 'milk': '🥛', 'bread': '🍞',
+                'school': '🏫', 'teacher': '👩‍🏫', 'book': '📖', 'pen': '🖊️',
+                'ball': '⚽', 'kite': '🪁', 'family': '👨‍👩‍👧‍👦',
+                'father': '👨', 'mother': '👩', 'brother': '👦', 'sister': '👧',
+                'sun': '☀️', 'moon': '🌙', 'star': '⭐', 'flower': '🌸',
+                'tree': '🌳', 'apple': '🍎', 'banana': '🍌', 'house': '🏠',
+                'car': '🚗', 'plane': '✈️', 'boat': '🚢', 'train': '🚂',
+                'happy': '😊', 'sad': '😢', 'angry': '😠', 'sleep': '😴',
+                'eat': '🍴', 'run': '🏃', 'jump': '🦘', 'sing': '🎤',
+                'dance': '💃', 'read': '📚', 'play': '🎮', 'go': '🚶',
+                'day': '📅', 'morning': '🌅', 'afternoon': '🌇',
+                'baby': '👶', 'grandpa': '👴', 'grandma': '👵',
+                'home': '🏠', 'garden': '🌻', 'river': '🏞️', 'mountain': '⛰️'
+            };
+            return map[word.toLowerCase()] || '📖';
+        }
+        
+        // 初始化
+        init();
+    </script>
+</body>
+</html>

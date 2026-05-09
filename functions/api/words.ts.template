@@ -1,0 +1,31 @@
+// Gina 学英语 - API 端点
+// 兼容 Cloudflare Pages Functions 和 Vercel Edge Functions
+
+// 词库数据（构建时注入）
+const WORD_DATA = {{WORDS_JSON}};
+
+export default async function handler(request, context) {
+  // 处理 CORS
+  const headers = new Headers();
+  headers.set('Access-Control-Allow-Origin', '*');
+  headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { headers });
+  }
+  
+  // 返回词库数据
+  const response = new Response(JSON.stringify({
+    words: WORD_DATA,
+    total: WORD_DATA.length,
+    updatedAt: new Date().toISOString()
+  }), {
+    headers: {
+      ...Object.fromEntries(headers),
+      'Content-Type': 'application/json'
+    }
+  });
+  
+  return response;
+}
