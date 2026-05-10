@@ -72,7 +72,22 @@ export function WordCard({ word, isFlipped, onFlip, onNext, onPrev, onKnow, onDo
             className="w-full bg-white rounded-[2rem] shadow-xl border-2 border-purple-100 p-8 flex flex-col items-center justify-center min-h-[380px]"
             style={{ backfaceVisibility: "hidden" }}
           >
-            <span className="text-5xl mb-4">{emoji}</span>
+            {/* 配图：有 image 字段时显示，否则 fallback 到 emoji */}
+            <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 mb-4 flex items-center justify-center">
+              {word.image ? (
+                <img
+                  src={word.image}
+                  alt={word.word}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+              ) : null}
+              <span className="text-6xl hidden">{emoji}</span>
+            </div>
             <h2 className="text-5xl font-extrabold text-gray-800 mb-2 tracking-wide">{word.word}</h2>
             <div className="flex items-center gap-3 mb-4">
               <span className="text-xl text-gray-400 font-mono">{word.phonetic}</span>
