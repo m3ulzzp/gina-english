@@ -119,7 +119,7 @@ gina-english/
 
 ### 低优先级
 5. **后端 API** - 如果后续需要用户进度保存，再恢复 `/api/words` 函数
-6. **替换 Token** - 评估是否需要标准 `cf_` API Token 替代 `cfut_` User Services Token
+6. **替换 Token** - 评估是否需要标准 `cf_` API Token 替代 `cfut_[REDACTED]` User Services Token
 
 ---
 
@@ -128,11 +128,11 @@ gina-english/
 ### 完成事项
 1. 解决 wrangler 全局安装冲突（ENOTEMPTY 错误）
 2. 安装 wrangler 4.90.0
-3. 处理 cfut_ 前缀 User Services Token 无法自动获取 Account ID 的问题
+3. 处理 cfut_[REDACTED] 前缀 User Services Token 无法自动获取 Account ID 的问题
 4. 通过 Accounts API 手动查询并注入 Account ID
 5. 首次部署成功：https://8ae3d81f.gina-english.pages.dev
 
 ### 经验
-- `cfut_` 开头的 Token 是 User Services Token，不能用于 wrangler 自动鉴权
+- `cfut_[REDACTED]` 开头的 Token 是 User Services Token，不能用于 wrangler 自动鉴权
 - 非交互式环境必须显式注入 `CLOUDFLARE_API_TOKEN` 和 `CLOUDFLARE_ACCOUNT_ID`
 - 部署前需要检查 API 路由是否正常返回 JSON
