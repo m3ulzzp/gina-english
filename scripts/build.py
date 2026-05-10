@@ -216,9 +216,25 @@ def main():
     else:
         print("⚠️  未找到配图数据（运行 get_images.py 获取）")
     
+    # 年级映射：中文 -> 前端 Grade 类型
+    GRADE_MAP = {
+        '一年级': 'grade1', '二年级': 'grade2', '三年级': 'grade3',
+        '四年级': 'grade4', '五年级': 'grade5', '六年级': 'grade6',
+    }
+    # 词性映射：pos -> type
+    POS_TO_TYPE = {
+        'n.': 'noun', 'noun': 'noun', '名词': 'noun',
+        'v.': 'verb', 'verb': 'verb', '动词': 'verb',
+        'adj.': 'adjective', 'adjective': 'adjective', '形容词': 'adjective',
+        'adv.': 'adverb', 'adverb': 'adverb', '副词': 'adverb',
+        'prep.': 'preposition', 'preposition': 'preposition', '介词': 'preposition',
+        'conj.': 'conjunction', 'conjunction': 'conjunction', '连词': 'conjunction',
+        'pron.': 'pronoun', 'pronoun': 'pronoun', '代词': 'pronoun',
+    }
+
     # 合并数据
     words_with_images = []
-    for word in all_words:
+    for i, word in enumerate(all_words):
         w = dict(word)
         img = images.get(word['word'])
         if img:
@@ -227,6 +243,10 @@ def main():
         else:
             w['image'] = None
             w['photographer'] = None
+        # 添加缺失字段
+        w['id'] = f"{GRADE_MAP.get(w['grade'], 'grade1')}_{i+1:04d}"
+        w['type'] = POS_TO_TYPE.get(w.get('pos', ''), 'noun')
+        w['grade'] = GRADE_MAP.get(w['grade'], w['grade'])  # 转换为 grade1/grade2...
         words_with_images.append(w)
     
     # ========== 第二步：生成词库 JSON（必须在 Vite build 之前，因为 vite.config.ts 会读取它） ==========
