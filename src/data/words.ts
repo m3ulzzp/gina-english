@@ -8,6 +8,7 @@ export interface Word {
   grade: Grade;
   example: string;
   type: "noun" | "verb" | "adjective" | "adverb" | "preposition" | "conjunction" | "pronoun";
+  image?: string;  // Pexels image URL
 }
 
 export interface CardState {
