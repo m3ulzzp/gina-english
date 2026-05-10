@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useStore } from "../store/useStore";
 import { getWordsByGrade, type Word } from "../data/words";
 import { speak } from "../utils/speech";
+import { Link } from "react-router-dom";
 
 export function SpellingPage() {
   const { grade, wrongBook, incrementTodayCorrect, incrementTodayTotal } = useStore();
@@ -14,6 +15,7 @@ export function SpellingPage() {
   const [showHint, setShowHint] = useState(false);
   const [wordList, setWordList] = useState<Word[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isSpelling, setIsSpelling] = useState(false);
 
   // Pick words to practice (wrong book first, then new words)
   useEffect(() => {
@@ -39,6 +41,7 @@ export function SpellingPage() {
     setInput("");
     setResult(null);
     setShowHint(false);
+    setIsSpelling(false);
   }, [wordList, currentWord]);
 
   const handleSpeak = useCallback(() => {
@@ -89,6 +92,11 @@ export function SpellingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-pink-50 to-purple-50 py-6 sm:py-8 px-3 sm:px-4 relative overflow-hidden">
+      {/* Floating background decorations */}
+      <div className="floating-deco top-16 left-8 text-5xl" style={{ animationDelay: "0s" }}>✏️</div>
+      <div className="floating-deco top-32 right-12 text-4xl" style={{ animationDelay: "1s" }}>📝</div>
+      <div className="floating-deco bottom-32 left-12 text-5xl" style={{ animationDelay: "2s" }}>🎯</div>
+
       {/* Confetti */}
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50">
@@ -111,16 +119,19 @@ export function SpellingPage() {
       <div className="max-w-lg mx-auto">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-pink-500 to-orange-400 gradient-text mb-3">
-            ✏️ 拼写练习
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-pink-400 to-orange-400 flex items-center justify-center shadow-lg shadow-pink-200/40 animate-gentle-bounce">
+            <span className="text-3xl">✏️</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-pink-500 to-orange-400 gradient-text mb-4">
+            拼写练习
           </h1>
           <div className="flex items-center justify-center gap-3 sm:gap-4">
-            <div className="bg-white rounded-full px-4 py-2 shadow-md border-2 border-orange-50">
-              <span className="text-xs text-gray-400 block">连对</span>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-2 shadow-md border border-orange-100">
+              <span className="text-[11px] text-gray-400 block">连对</span>
               <span className="text-lg font-black text-orange-500">🔥 {streak}</span>
             </div>
-            <div className="bg-white rounded-full px-4 py-2 shadow-md border-2 border-purple-50">
-              <span className="text-xs text-gray-400 block">进度</span>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-2 shadow-md border border-purple-100">
+              <span className="text-[11px] text-gray-400 block">进度</span>
               <span className="text-lg font-black text-purple-500">
                 {currentWord ? wordList.indexOf(currentWord) + 1 : 0}/{wordList.length}
               </span>
@@ -129,27 +140,27 @@ export function SpellingPage() {
         </div>
 
         {/* Word display */}
-        <div className="bg-white rounded-[2.5rem] shadow-2xl border-[3px] border-pink-100 p-6 sm:p-8 mb-6 text-center relative overflow-hidden">
-          {/* Decorative corner dots */}
-          <div className="absolute top-4 left-4 flex gap-1">
-            <div className="w-2 h-2 rounded-full bg-pink-300/50" />
-            <div className="w-2 h-2 rounded-full bg-purple-300/50" />
-            <div className="w-2 h-2 rounded-full bg-yellow-300/50" />
-          </div>
+        <div className="bg-white rounded-3xl shadow-2xl border border-pink-50/50 p-6 sm:p-8 mb-6 text-center relative overflow-hidden">
+          {/* Top gradient bar */}
+          <div className="h-2 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 rounded-t-3xl -mx-6 -mt-6 mb-6" />
 
-          <div className="text-6xl sm:text-7xl mb-4 animate-float">🎯</div>
-          <p className="text-gray-400 mb-4 text-base">听发音，写出单词：</p>
+          {/* Decorative circles */}
+          <div className="absolute top-12 left-8 w-16 h-16 rounded-full bg-pink-100/20 blur-xl" />
+          <div className="absolute bottom-12 right-8 w-20 h-20 rounded-full bg-purple-100/20 blur-xl" />
+
+          <div className="text-5xl mb-3 animate-float relative z-10">🎯</div>
+          <p className="text-gray-400 mb-5 text-base relative z-10">听发音，写出单词：</p>
 
           <button
             onClick={handleSpeak}
-            className="w-24 h-24 sm:w-28 sm:h-28 mx-auto rounded-full bg-gradient-to-br from-pink-400 via-purple-400 to-indigo-500 text-white text-4xl shadow-xl hover:shadow-2xl hover:scale-110 active:scale-95 transition-all tap-target relative"
+            className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full bg-gradient-to-br from-pink-400 via-purple-400 to-indigo-500 text-white text-3xl shadow-xl hover:shadow-2xl hover:scale-110 active:scale-95 transition-all tap-target relative z-10"
             aria-label="听发音"
           >
             🔊
             <div className="absolute inset-0 rounded-full border-4 border-white/30 animate-ping" style={{ animationDuration: "2s" }} />
           </button>
 
-          <form onSubmit={handleSubmit} className="mt-6">
+          <form onSubmit={handleSubmit} className="mt-6 relative z-10">
             <input
               type="text"
               value={input}
@@ -157,12 +168,12 @@ export function SpellingPage() {
               placeholder="输入英文单词..."
               autoFocus
               disabled={result !== null}
-              className={`w-full text-center text-3xl sm:text-4xl font-black py-5 px-6 rounded-2xl border-[4px] outline-none transition-all ${
+              className={`w-full text-center text-3xl sm:text-4xl font-black py-4 px-6 rounded-2xl border-2 outline-none transition-all ${
                 result === "correct"
-                  ? "border-green-300 bg-green-50 text-green-600 animate-bounce-in"
+                  ? "border-green-300 bg-green-50 text-green-600"
                   : result === "wrong"
-                  ? "border-red-300 bg-red-50 text-red-500 animate-shake"
-                  : "border-pink-200 focus:border-pink-400 focus:bg-pink-50/30"
+                  ? "border-red-300 bg-red-50 text-red-500"
+                  : "border-pink-100 focus:border-pink-300 focus:bg-pink-50/30"
               } disabled:opacity-60`}
             />
 
@@ -171,7 +182,7 @@ export function SpellingPage() {
                 <button
                   type="button"
                   onClick={handleHint}
-                  className="flex-1 h-14 rounded-2xl bg-gradient-to-r from-yellow-300 to-amber-400 text-yellow-800 font-bold hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all tap-target flex items-center justify-center gap-2"
+                  className="flex-1 h-13 rounded-xl bg-gradient-to-r from-yellow-300 to-amber-400 text-yellow-800 font-bold hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all tap-target flex items-center justify-center gap-2"
                 >
                   💡 提示
                 </button>
@@ -179,7 +190,7 @@ export function SpellingPage() {
               <button
                 type="submit"
                 disabled={!input.trim() || result !== null}
-                className="flex-1 h-14 rounded-2xl bg-gradient-to-r from-pink-400 to-purple-500 text-white font-black text-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-40 disabled:hover:scale-100 tap-target flex items-center justify-center gap-2"
+                className="flex-1 h-13 rounded-xl bg-gradient-to-r from-pink-400 to-purple-500 text-white font-black text-lg hover:shadow-xl hover:shadow-pink-200/40 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-40 disabled:hover:scale-100 tap-target flex items-center justify-center gap-2"
               >
                 确认 ✓
               </button>
@@ -189,7 +200,7 @@ export function SpellingPage() {
           {/* Result feedback */}
           {result && (
             <div className={`mt-6 p-5 rounded-2xl animate-bounce-in ${
-              result === "correct" ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200" : "bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-200"
+              result === "correct" ? "bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100" : "bg-gradient-to-br from-red-50 to-pink-50 border border-red-100"
             }`}>
               {result === "correct" ? (
                 <div className="text-center">
@@ -212,7 +223,7 @@ export function SpellingPage() {
 
           {/* Hint */}
           {showHint && currentWord && (
-            <div className="mt-4 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl border-2 border-yellow-200">
+            <div className="mt-4 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl border border-yellow-100">
               <p className="text-sm text-yellow-700 font-semibold">
                 💡 提示：{currentWord.word[0]}...（共 {currentWord.word.length} 个字母）
               </p>

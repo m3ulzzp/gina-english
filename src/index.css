@@ -55,6 +55,24 @@ body {
   83% { border-color: #FF8FF8; }
   100% { border-color: #FF6B6B; }
 }
+@keyframes blob {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  50% { border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%; }
+  75% { border-radius: 60% 30% 60% 40% / 70% 40% 50% 60%; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
 
 .animate-float { animation: float 3s ease-in-out infinite; }
 .animate-bounce-in { animation: bounce-in 0.5s ease-out; }
@@ -62,6 +80,11 @@ body {
 .animate-star-pop { animation: star-pop 0.6s ease-out; }
 .animate-shake { animation: shake 0.5s ease-in-out; }
 .animate-confetti-fall { animation: confetti-fall 3s ease-in forwards; }
+.animate-blob { animation: blob 8s ease-in-out infinite; }
+.animate-blob-delay { animation: blob 8s ease-in-out infinite 2s; }
+.animate-shimmer { animation: shimmer 3s ease-in-out infinite; }
+.animate-gentle-bounce { animation: gentle-bounce 2s ease-in-out infinite; }
+.animate-sparkle { animation: sparkle 1.5s ease-in-out infinite; }
 
 /* ===== Confetti ===== */
 .confetti-piece {
@@ -90,6 +113,21 @@ body {
   color: transparent;
 }
 
+/* ===== Shimmer effect ===== */
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* ===== Floating decorations ===== */
+.floating-deco {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.15;
+  animation: float 4s ease-in-out infinite;
+}
+
 /* ===== Scrollbar hide ===== */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -97,4 +135,33 @@ body {
 /* ===== Mobile safe area ===== */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+/* ===== Glass morphism ===== */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ===== Image placeholder animation ===== */
+.image-placeholder {
+  background: linear-gradient(110deg, #f0f0f0 8%, #fafafa 18%, #f0f0f0 33%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* ===== Card entrance animation ===== */
+.card-enter {
+  animation: card-enter 0.4s ease-out;
+}
+@keyframes card-enter {
+  0% { opacity: 0; transform: translateY(16px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
